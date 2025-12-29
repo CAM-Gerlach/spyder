@@ -20,13 +20,18 @@ from qtpy.QtCore import QPoint, Qt
 from qtpy.QtGui import QIcon, QImage, QPainter, QPixmap
 from qtpy.QtSvg import QSvgRenderer
 from qtpy.QtWidgets import (
-    QApplication, QMainWindow, QSizePolicy, QToolBar, QWidget, QToolButton
+    QApplication,
+    QMainWindow,
+    QSizePolicy,
+    QToolBar,
+    QWidget,
+    QToolButton,
 )
 
 # Local imports
 from spyder.api.config.mixins import (
     SpyderConfigurationAccessor,
-    SpyderConfigurationObserver
+    SpyderConfigurationObserver,
 )
 from spyder.api.exceptions import SpyderAPIError
 from spyder.api.shortcuts import SpyderShortcutsMixin
@@ -37,7 +42,11 @@ from spyder.utils.icon_manager import ima
 from spyder.utils.image_path_manager import get_image_path
 from spyder.utils.qthelpers import create_action, create_toolbutton
 from spyder.utils.registries import (
-    ACTION_REGISTRY, MENU_REGISTRY, TOOLBAR_REGISTRY, TOOLBUTTON_REGISTRY)
+    ACTION_REGISTRY,
+    MENU_REGISTRY,
+    TOOLBAR_REGISTRY,
+    TOOLBUTTON_REGISTRY,
+)
 from spyder.utils.stylesheet import PANES_TOOLBAR_STYLESHEET
 
 
@@ -46,10 +55,20 @@ class SpyderToolButtonMixin:
     Provide methods to create, add and get toolbuttons.
     """
 
-    def create_toolbutton(self, name, text=None, icon=None,
-                          tip=None, toggled=None, triggered=None,
-                          autoraise=True, text_beside_icon=False,
-                          section=None, option=None, register=True):
+    def create_toolbutton(
+        self,
+        name,
+        text=None,
+        icon=None,
+        tip=None,
+        toggled=None,
+        triggered=None,
+        autoraise=True,
+        text_beside_icon=False,
+        section=None,
+        option=None,
+        register=True,
+    ):
         """
         Create a Spyder toolbutton.
         """
@@ -75,7 +94,7 @@ class SpyderToolButtonMixin:
             id_=name,
             plugin=self.PLUGIN_NAME,
             context_name=self.CONTEXT_NAME,
-            register_toolbutton=register
+            register_toolbutton=register,
         )
         toolbutton.name = name
 
@@ -86,8 +105,12 @@ class SpyderToolButtonMixin:
 
         return toolbutton
 
-    def get_toolbutton(self, name: str, context: Optional[str] = None,
-                       plugin: Optional[str] = None) -> QToolButton:
+    def get_toolbutton(
+        self,
+        name: str,
+        context: Optional[str] = None,
+        plugin: Optional[str] = None,
+    ) -> QToolButton:
         """
         Return toolbutton by name, plugin and context.
 
@@ -118,8 +141,9 @@ class SpyderToolButtonMixin:
         context = self.CONTEXT_NAME if context is None else context
         return TOOLBUTTON_REGISTRY.get_reference(name, plugin, context)
 
-    def get_toolbuttons(self, context: Optional[str] = None,
-                        plugin: Optional[str] = None) -> Dict[str, QToolButton]:
+    def get_toolbuttons(
+        self, context: Optional[str] = None, plugin: Optional[str] = None
+    ) -> Dict[str, QToolButton]:
         """
         Return all toolbuttons defined by a context on a given plugin.
 
@@ -148,15 +172,25 @@ class SpyderToolbarMixin:
     Provide methods to create, add and get toolbars.
     """
 
-    def add_item_to_toolbar(self, action_or_widget, toolbar, section=None,
-                            before=None, before_section=None):
+    def add_item_to_toolbar(
+        self,
+        action_or_widget,
+        toolbar,
+        section=None,
+        before=None,
+        before_section=None,
+    ):
         """
         If you provide a `before` action, the action will be placed before this
         one, so the section option will be ignored, since the action will now
         be placed in the same section as the `before` action.
         """
-        toolbar.add_item(action_or_widget, section=section, before=before,
-                         before_section=before_section)
+        toolbar.add_item(
+            action_or_widget,
+            section=section,
+            before=before,
+            before_section=before_section,
+        )
 
     def create_stretcher(self, id_=None):
         """
@@ -170,9 +204,7 @@ class SpyderToolbarMixin:
         return stretcher
 
     def create_toolbar(
-        self,
-        name: str,
-        register: bool = True
+        self, name: str, register: bool = True
     ) -> SpyderToolbar:
         """
         Create a Spyder toolbar.
@@ -192,8 +224,12 @@ class SpyderToolbarMixin:
             )
         return toolbar
 
-    def get_toolbar(self, name: str, context: Optional[str] = None,
-                    plugin: Optional[str] = None) -> QToolBar:
+    def get_toolbar(
+        self,
+        name: str,
+        context: Optional[str] = None,
+        plugin: Optional[str] = None,
+    ) -> QToolBar:
         """
         Return toolbar by name, plugin and context.
 
@@ -224,8 +260,9 @@ class SpyderToolbarMixin:
         context = self.CONTEXT_NAME if context is None else context
         return TOOLBAR_REGISTRY.get_reference(name, plugin, context)
 
-    def get_toolbars(self, context: Optional[str] = None,
-                     plugin: Optional[str] = None) -> Dict[str, QToolBar]:
+    def get_toolbars(
+        self, context: Optional[str] = None, plugin: Optional[str] = None
+    ) -> Dict[str, QToolBar]:
         """
         Return all toolbars defined by a context on a given plugin.
 
@@ -256,13 +293,19 @@ class SpyderMenuMixin:
     sections in a simple way.
     """
 
-    def add_item_to_menu(self, action_or_menu, menu, section=None,
-                         before=None, before_section=None):
+    def add_item_to_menu(
+        self,
+        action_or_menu,
+        menu,
+        section=None,
+        before=None,
+        before_section=None,
+    ):
         """
         Add a SpyderAction or a QWidget to the menu.
         """
         if not isinstance(menu, SpyderMenu):
-            raise SpyderAPIError('Menu must be an instance of SpyderMenu!')
+            raise SpyderAPIError("Menu must be an instance of SpyderMenu!")
 
         menu.add_action(
             action_or_menu,
@@ -280,7 +323,7 @@ class SpyderMenuMixin:
         reposition: Optional[bool] = True,
         register: bool = True,
         min_width: Optional[int] = None,
-        MenuClass=SpyderMenu
+        MenuClass=SpyderMenu,
     ) -> SpyderMenu:
         """
         Create a SpyderMenu or a subclass of it.
@@ -292,7 +335,7 @@ class SpyderMenuMixin:
         * Refer to the documentation for `SpyderMenu` to learn about its args.
         """
         if register:
-            menus = getattr(self, '_menus', None)
+            menus = getattr(self, "_menus", None)
             if menus is None:
                 self._menus = OrderedDict()
 
@@ -306,7 +349,7 @@ class SpyderMenuMixin:
             menu_id=menu_id,
             title=title,
             min_width=min_width,
-            reposition=reposition
+            reposition=reposition,
         )
 
         if icon is not None:
@@ -327,7 +370,7 @@ class SpyderMenuMixin:
         title: Optional[str] = None,
         icon: Optional[QIcon] = None,
         reposition: Optional[bool] = True,
-        register: bool = True
+        register: bool = True,
     ) -> SpyderMenu:
         """
         Create a menu for Spyder.
@@ -355,14 +398,14 @@ class SpyderMenuMixin:
             title=title,
             icon=icon,
             reposition=reposition,
-            register=register
+            register=register,
         )
 
     def get_menu(
         self,
         name: str,
         context: Optional[str] = None,
-        plugin: Optional[str] = None
+        plugin: Optional[str] = None,
     ) -> SpyderMenu:
         """
         Return a menu by name, plugin and context.
@@ -394,8 +437,9 @@ class SpyderMenuMixin:
         context = self.CONTEXT_NAME if context is None else context
         return MENU_REGISTRY.get_reference(name, plugin, context)
 
-    def get_menus(self, context: Optional[str] = None,
-                  plugin: Optional[str] = None) -> Dict[str, SpyderMenu]:
+    def get_menus(
+        self, context: Optional[str] = None, plugin: Optional[str] = None
+    ) -> Dict[str, SpyderMenu]:
         """
         Return all menus defined by a context on a given plugin.
 
@@ -445,13 +489,29 @@ class SpyderActionMixin:
     # On one side it refers to a Qt widget shortcut context and on the
     # other it refers to a section of the configuration (or the widget
     # name where it is applied).
-    def create_action(self, name, text, icon=None, icon_text='', tip=None,
-                      toggled=None, triggered=None, data=None,
-                      shortcut=None, shortcut_context=None,
-                      context=Qt.WidgetWithChildrenShortcut, initial=None,
-                      register_shortcut=False, section=None, option=None,
-                      parent=None, register_action=True, overwrite=False,
-                      context_name=None, menurole=None):
+    def create_action(
+        self,
+        name,
+        text,
+        icon=None,
+        icon_text="",
+        tip=None,
+        toggled=None,
+        triggered=None,
+        data=None,
+        shortcut=None,
+        shortcut_context=None,
+        context=Qt.WidgetWithChildrenShortcut,
+        initial=None,
+        register_shortcut=False,
+        section=None,
+        option=None,
+        parent=None,
+        register_action=True,
+        overwrite=False,
+        context_name=None,
+        menurole=None,
+    ):
         """
         name: str
             unique identifiable name for the action
@@ -520,7 +580,7 @@ class SpyderActionMixin:
         """
         if triggered is None and toggled is None:
             raise SpyderAPIError(
-                'Action must provide the toggled or triggered parameters!'
+                "Action must provide the toggled or triggered parameters!"
             )
 
         if parent is None:
@@ -548,10 +608,11 @@ class SpyderActionMixin:
             id_=name,
             plugin=self.PLUGIN_NAME,
             context_name=(
-                self.CONTEXT_NAME if context_name is None else context_name),
+                self.CONTEXT_NAME if context_name is None else context_name
+            ),
             register_action=register_action,
             overwrite=overwrite,
-            menurole=menurole
+            menurole=menurole,
         )
         action.name = name
         if icon_text:
@@ -567,7 +628,8 @@ class SpyderActionMixin:
                 action.setChecked(initial)
             elif triggered:
                 raise SpyderAPIError(
-                    'Initial values can only apply to togglable actions!')
+                    "Initial values can only apply to togglable actions!"
+                )
         else:
             if toggled:
                 if section is not None and option is not None:
@@ -576,8 +638,12 @@ class SpyderActionMixin:
 
         return action
 
-    def get_action(self, name: str, context: Optional[str] = None,
-                   plugin: Optional[str] = None) -> Any:
+    def get_action(
+        self,
+        name: str,
+        context: Optional[str] = None,
+        plugin: Optional[str] = None,
+    ) -> Any:
         """
         Return an action by name, context and plugin.
 
@@ -609,8 +675,9 @@ class SpyderActionMixin:
 
         return ACTION_REGISTRY.get_reference(name, plugin, context)
 
-    def get_actions(self, context: Optional[str] = None,
-                    plugin: Optional[str] = None) -> dict:
+    def get_actions(
+        self, context: Optional[str] = None, plugin: Optional[str] = None
+    ) -> dict:
         """
         Return all actions defined by a context on a given plugin.
 
@@ -654,7 +721,7 @@ class SpyderActionMixin:
 
         Exposed actions are actions created by the `create_action` method.
         """
-        raise NotImplementedError('')
+        raise NotImplementedError("")
 
 
 class SpyderWidgetMixin(
@@ -679,7 +746,7 @@ class SpyderWidgetMixin(
     CONTEXT_NAME = None
 
     def __init__(self, class_parent=None, parent=None):
-        for attr in ['CONF_SECTION', 'PLUGIN_NAME']:
+        for attr in ["CONF_SECTION", "PLUGIN_NAME"]:
             if getattr(self, attr, None) is None:
                 if hasattr(class_parent, attr):
                     # Inherit class_parent CONF_SECTION/PLUGIN_NAME value
@@ -744,7 +811,7 @@ class SpyderMainWindowMixin:
 
         # With this we want to maximize only the Spyder main window and not the
         # plugin ones, which usually are not maximized.
-        if not hasattr(self, 'is_window_widget'):
+        if not hasattr(self, "is_window_widget"):
             self.showMaximized()
 
 
@@ -771,10 +838,9 @@ class SvgToScaledPixmap(SpyderConfigurationAccessor):
         if in_package:
             image_path = get_image_path(svg_file)
 
-        if self.get_conf('high_dpi_custom_scale_factor', section='main'):
+        if self.get_conf("high_dpi_custom_scale_factor", section="main"):
             scale_factors = self.get_conf(
-                'high_dpi_custom_scale_factors',
-                section='main'
+                "high_dpi_custom_scale_factors", section="main"
             )
             scale_factor = float(scale_factors.split(":")[0])
         else:
@@ -793,8 +859,9 @@ class SvgToScaledPixmap(SpyderConfigurationAccessor):
 
         # Paint image using svg renderer
         image = QImage(
-            int(width * scale_factor), int(height * scale_factor),
-            QImage.Format_ARGB32_Premultiplied
+            int(width * scale_factor),
+            int(height * scale_factor),
+            QImage.Format_ARGB32_Premultiplied,
         )
         image.fill(0)
         painter = QPainter(image)
