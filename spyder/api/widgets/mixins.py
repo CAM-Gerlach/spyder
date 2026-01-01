@@ -383,8 +383,9 @@ class SpyderMenuMixin:
             Localized text string for the menu.
         icon: QIcon or None
             Icon to use for the menu.
-        reposition: bool, optional (default True)
+        reposition: bool, optional
             Whether to vertically reposition the menu due to its padding.
+            ``True`` by default.
         register: bool
             Whether to register the menu in the global registry.
 
@@ -660,7 +661,7 @@ class SpyderActionMixin:
 
         Returns
         -------
-        action: SpyderAction
+        spyder.utils.qthelpers.SpyderAction
             The corresponding action stored under the given `name`, `context`
             and `plugin`.
 
@@ -692,7 +693,7 @@ class SpyderActionMixin:
 
         Returns
         -------
-        actions: Dict[str, SpyderAction]
+        actions: Dict[str, spyder.utils.qthelpers.SpyderAction]
             A dictionary that maps string keys to their corresponding actions.
 
         Notes
