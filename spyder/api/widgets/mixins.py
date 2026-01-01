@@ -14,20 +14,13 @@ from __future__ import annotations
 
 # Standard library imports
 from collections import OrderedDict
-from typing import Any, Dict, Optional
+from typing import Any, Dict, Optional, TYPE_CHECKING
 
 # Third party imports
 from qtpy.QtCore import QPoint, Qt
-from qtpy.QtGui import QIcon, QImage, QPainter, QPixmap
+from qtpy.QtGui import QImage, QPainter, QPixmap
 from qtpy.QtSvg import QSvgRenderer
-from qtpy.QtWidgets import (
-    QApplication,
-    QMainWindow,
-    QSizePolicy,
-    QToolBar,
-    QToolButton,
-    QWidget,
-)
+from qtpy.QtWidgets import QApplication, QSizePolicy, QWidget
 
 # Local imports
 from spyder.api.config.mixins import (
@@ -48,6 +41,10 @@ from spyder.utils.registries import (
     TOOLBUTTON_REGISTRY,
 )
 from spyder.utils.stylesheet import PANES_TOOLBAR_STYLESHEET
+
+if TYPE_CHECKING:
+    from qtpy.QtGui import QIcon
+    from qtpy.QtWidgets import QMainWindow, QToolBar, QToolButton
 
 
 class SpyderToolButtonMixin:
